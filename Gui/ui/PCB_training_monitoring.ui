@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1533</width>
+    <height>1000</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: #FAFCFB;</string>
+  </property>
+  <widget class="QStackedWidget" name="stackedWidget">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>-40</y>
+     <width>1261</width>
+     <height>1000</height>
+    </rect>
+   </property>
+   <property name="currentIndex">
+    <number>0</number>
+   </property>
+   <widget class="QWidget" name="page">
+    <widget class="QLabel" name="title_lb">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>50</y>
+       <width>331</width>
+       <height>71</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Bahnschrift Light</family>
+       <pointsize>22</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Live Monitoring</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>110</y>
+       <width>541</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Bahnschrift Light</family>
+      </font>
+     </property>
+     <property name="text">
+      <string>Monitor training model status in real-time</string>
+     </property>
+    </widget>
+    <widget class="QGroupBox" name="groupBox_3">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>150</y>
+       <width>1181</width>
+       <height>751</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Bahnschrift Light</family>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border: none;</string>
+     </property>
+     <property name="title">
+      <string>    Current Tasks</string>
+     </property>
+     <widget class="QWidget" name="card_7" native="true">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>30</y>
+        <width>1161</width>
+        <height>711</height>
+       </rect>
+      </property>
+      <property name="autoFillBackground">
+       <bool>false</bool>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">border: 1px solid #E0E0E0;  /* 은은한 회색 테두리 */
+border-radius: 20px;
+background-color: white;   /* 배경은 그대로 흰색 */
+</string>
+      </property>
+      <widget class="QLabel" name="status_label">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>15</y>
+         <width>81</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>Bahnschrift SemiBold</family>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">border: none;
+background-color: transparent;
+</string>
+       </property>
+       <property name="text">
+        <string>Training...</string>
+       </property>
+      </widget>
+      <widget class="QProgressBar" name="progressBar">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>50</y>
+         <width>1101</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QProgressBar {
+    border: 1px solid #5b5aaa;               /* 민트톤 테두리 */
+    border-radius: 10px;
+    text-align: center;
+    background-color: #dedeee;               /* 연한 민트 배경 */
+    color: #FFFFFF;                          /* 텍스트도 같은 계열로 */
+    font-weight: bold;
+}
+
+QProgressBar::chunk {
+    background-color: #5b5aaa;               /* 짙은 민트 chunk */
+    border-radius: 10px;
+}
+</string>
+       </property>
+       <property name="value">
+        <number>1</number>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="persnal_btn_4">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>50</y>
+         <width>41</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QPushButton {
+    border: none;
+    background-color: transparent;
+    color: #5C6F7B;
+}
+
+QPushButton:hover,
+QPushButton:checked {
+    background-color: rgba(93, 166, 216, 0.2);  /* 살짝 더 진하게 */
+    border-radius: 6px;
+}
+</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>:/newPrefix/재생일시중단.svg</normaloff>:/newPrefix/재생일시중단.svg</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>24</width>
+         <height>24</height>
+        </size>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QWidget" name="widget" native="true">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>90</y>
+         <width>1101</width>
+         <height>421</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QTextEdit" name="logText">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>530</y>
+         <width>1101</width>
+         <height>161</height>
+        </rect>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QWidget" name="tasks" native="true">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>10</width>
+        <height>10</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">
+background: #5b5aaa;
+border-radius: 5px;
+</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QPushButton" name="test_btn">
+     <property name="geometry">
+      <rect>
+       <x>1050</x>
+       <y>900</y>
+       <width>151</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Bahnschrift Light</family>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="layoutDirection">
+      <enum>Qt::RightToLeft</enum>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton {
+    background-color: #9c9ccc;     /* 메인 민트톤 */
+    border-radius: 20px;
+    color: #FFFFFF;                /* 진한 민트 텍스트 */
+}
+
+QPushButton:hover {
+    background-color: #dedeee;     /* hover 시 연민트 */
+    color: #5b5aaa;                /* 동일 톤 유지 */
+}
+</string>
+     </property>
+     <property name="text">
+      <string>Test</string>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>../Downloads/앞으로.svg</normaloff>../Downloads/앞으로.svg</iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>30</width>
+       <height>30</height>
+      </size>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="back_btn">
+     <property name="geometry">
+      <rect>
+       <x>890</x>
+       <y>900</y>
+       <width>151</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Bahnschrift Light</family>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="layoutDirection">
+      <enum>Qt::RightToLeft</enum>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton {
+    background-color: #9c9ccc;     /* 메인 민트톤 */
+    border-radius: 20px;
+    color: #FFFFFF;                /* 진한 민트 텍스트 */
+}
+
+QPushButton:hover {
+    background-color: #dedeee;     /* hover 시 연민트 */
+    color: #5b5aaa;                /* 동일 톤 유지 */
+}
+</string>
+     </property>
+     <property name="text">
+      <string>Back</string>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>../Downloads/앞으로.svg</normaloff>../Downloads/앞으로.svg</iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>30</width>
+       <height>30</height>
+      </size>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="page_2"/>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

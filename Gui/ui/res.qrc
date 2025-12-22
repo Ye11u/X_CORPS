@@ -1,0 +1,20 @@
+<RCC>
+  <qresource prefix="newPrefix">
+    <file alias="images/home_white.svg">../images/home_white.svg</file>
+    <file alias="images/user_white.svg">../images/user_white.svg</file>
+    <file alias="images/monitor_white.svg">../images/monitor_white.svg</file>
+    <file alias="images/mail_white.svg">../images/mail_white.svg</file>
+    <file alias="images/back.svg">../images/back.svg</file>
+    <file alias="images/forward.svg">../images/forward.svg</file>
+    <file alias="images/pause_play.svg">../images/pause_play.svg</file>
+    <file alias="images/reset_white.svg">../images/reset_white.svg</file>
+    <file alias="images/settings_white.svg">../images/settings_white.svg</file>
+    <file alias="images/samsung_white_logo.svg">../images/samsung_white_logo.svg</file>
+    <file alias="images/orail.png">../images/orail.png</file>
+    <file alias="images/orail_logo_투명.png">../images/orail_logo_투명.png</file>
+  </qresource>
+
+  <qresource prefix="icons">
+    <file alias="orail.png">../images/orail.png</file>
+  </qresource>
+</RCC>

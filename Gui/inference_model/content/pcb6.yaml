@@ -1,0 +1,9 @@
+names:
+  0: silk
+  1: short
+  2: pad_open
+  3: open
+path: D:\tech_gui\tech_gui\tech_gui\inference_model\content\pcb_std
+test: images/test
+train: images/train
+val: images/test

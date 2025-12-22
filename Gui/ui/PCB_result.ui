@@ -1,0 +1,521 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1465</width>
+    <height>1139</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QStackedWidget" name="stackedWidget">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>1481</width>
+      <height>1231</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: #FAFCFB;</string>
+    </property>
+    <property name="lineWidth">
+     <number>24</number>
+    </property>
+    <widget class="QWidget" name="stackedWidgetPage1">
+     <widget class="QLabel" name="title_lb">
+      <property name="geometry">
+       <rect>
+        <x>50</x>
+        <y>20</y>
+        <width>591</width>
+        <height>61</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Bahnschrift Light</family>
+        <pointsize>21</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>PCB Defect Detection</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label">
+      <property name="geometry">
+       <rect>
+        <x>50</x>
+        <y>80</y>
+        <width>1191</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Bahnschrift Light</family>
+       </font>
+      </property>
+      <property name="text">
+       <string>Distinguish between normal and defective images, and check the defect type using the detection labels.</string>
+      </property>
+     </widget>
+     <widget class="QWidget" name="right_widget" native="true">
+      <property name="geometry">
+       <rect>
+        <x>850</x>
+        <y>260</y>
+        <width>241</width>
+        <height>611</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QWidget {
+    border-radius: 12px;
+    background: #6aa7c9;   /* 네이비 블루 단색 */
+}
+</string>
+      </property>
+      <widget class="QScrollArea" name="scroll_area_list">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>60</y>
+         <width>221</width>
+         <height>541</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QWidget {
+    background-color: #edf1f5;   /* 연한 블루 톤 */
+    border: 15;
+}
+</string>
+       </property>
+       <property name="widgetResizable">
+        <bool>true</bool>
+       </property>
+       <widget class="QWidget" name="scrollAreaWidgetContents_2">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>221</width>
+          <height>541</height>
+         </rect>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QLabel" name="label_3">
+       <property name="geometry">
+        <rect>
+         <x>61</x>
+         <y>20</y>
+         <width>111</width>
+         <height>25</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>Bahnschrift SemiBold</family>
+         <pointsize>15</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">    color: rgb(0, 0, 0);
+    font-weight: bold;</string>
+       </property>
+       <property name="text">
+        <string>File list</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QWidget" name="widget_2" native="true">
+      <property name="geometry">
+       <rect>
+        <x>50</x>
+        <y>260</y>
+        <width>781</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: #6aa7c9;
+border-radius: 5px;</string>
+      </property>
+      <widget class="QLabel" name="label_2">
+       <property name="geometry">
+        <rect>
+         <x>15</x>
+         <y>5</y>
+         <width>71</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>Bahnschrift SemiBold</family>
+         <pointsize>11</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>Filter : </string>
+       </property>
+      </widget>
+      <widget class="QWidget" name="layoutWidget">
+       <property name="geometry">
+        <rect>
+         <x>92</x>
+         <y>9</y>
+         <width>671</width>
+         <height>29</height>
+        </rect>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="QPushButton" name="all_btn">
+          <property name="font">
+           <font>
+            <family>Bahnschrift SemiBold</family>
+            <pointsize>11</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QPushButton:hover {
+    background-color: #4480a8;   /* hover 시 메인 블루 */
+    color: white;                /* 글자는 반전 */
+}
+
+QPushButton:pressed {
+    background-color: #305c7d;   /* 눌렀을 때 더 진하게 */
+    color: white;
+}</string>
+          </property>
+          <property name="text">
+           <string>all</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="normal_btn">
+          <property name="font">
+           <font>
+            <family>Bahnschrift SemiBold</family>
+            <pointsize>11</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QPushButton:hover {
+    background-color: #4480a8;   /* hover 시 메인 블루 */
+    color: white;                /* 글자는 반전 */
+}
+
+QPushButton:pressed {
+    background-color: #305c7d;   /* 눌렀을 때 더 진하게 */
+    color: white;
+}</string>
+          </property>
+          <property name="text">
+           <string>normal</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="open_btn">
+          <property name="font">
+           <font>
+            <family>Bahnschrift SemiBold</family>
+            <pointsize>11</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QPushButton:hover {
+    background-color: #4480a8;   /* hover 시 메인 블루 */
+    color: white;                /* 글자는 반전 */
+}
+
+QPushButton:pressed {
+    background-color: #305c7d;   /* 눌렀을 때 더 진하게 */
+    color: white;
+}</string>
+          </property>
+          <property name="text">
+           <string>open</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pad_open_btn">
+          <property name="font">
+           <font>
+            <family>Bahnschrift SemiBold</family>
+            <pointsize>11</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QPushButton:hover {
+    background-color: #4480a8;   /* hover 시 메인 블루 */
+    color: white;                /* 글자는 반전 */
+}
+
+QPushButton:pressed {
+    background-color: #305c7d;   /* 눌렀을 때 더 진하게 */
+    color: white;
+}</string>
+          </property>
+          <property name="text">
+           <string>pad_open</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="short_btn">
+          <property name="font">
+           <font>
+            <family>Bahnschrift SemiBold</family>
+            <pointsize>11</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QPushButton:hover {
+    background-color: #4480a8;   /* hover 시 메인 블루 */
+    color: white;                /* 글자는 반전 */
+}
+
+QPushButton:pressed {
+    background-color: #305c7d;   /* 눌렀을 때 더 진하게 */
+    color: white;
+}</string>
+          </property>
+          <property name="text">
+           <string>short</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="silk_btn">
+          <property name="font">
+           <font>
+            <family>Bahnschrift SemiBold</family>
+            <pointsize>11</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QPushButton:hover {
+    background-color: #4480a8;   /* hover 시 메인 블루 */
+    color: white;                /* 글자는 반전 */
+}
+
+QPushButton:pressed {
+    background-color: #305c7d;   /* 눌렀을 때 더 진하게 */
+    color: white;
+}</string>
+          </property>
+          <property name="text">
+           <string>silk</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+     <widget class="QLineEdit" name="search_edit">
+      <property name="geometry">
+       <rect>
+        <x>50</x>
+        <y>200</y>
+        <width>781</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Bahnschrift Light</family>
+        <pointsize>10</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">border: 1px solid #4a77a8;   /* 민트톤 테두리 */
+border-radius: 20px;
+</string>
+      </property>
+      <property name="inputMask">
+       <string/>
+      </property>
+      <property name="placeholderText">
+       <string>  Search for the data you want to check. </string>
+      </property>
+     </widget>
+     <widget class="QWidget" name="widget_4" native="true">
+      <property name="geometry">
+       <rect>
+        <x>850</x>
+        <y>200</y>
+        <width>241</width>
+        <height>51</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: #6aa7c9;   /* 은은한 민트 */
+border-radius: 15px;
+</string>
+      </property>
+      <widget class="QLabel" name="map_label">
+       <property name="geometry">
+        <rect>
+         <x>110</x>
+         <y>5</y>
+         <width>121</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>Arial</family>
+         <pointsize>20</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_4">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>5</y>
+         <width>91</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>Bahnschrift SemiBold</family>
+         <pointsize>13</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">    color: rgb(0, 0, 0);
+    font-weight: bold;</string>
+       </property>
+       <property name="text">
+        <string>mAP 50 :</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QScrollArea" name="scroll_area_images">
+      <property name="geometry">
+       <rect>
+        <x>50</x>
+        <y>320</y>
+        <width>781</width>
+        <height>551</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: #edf1f5;
+border-radius: 15px;</string>
+      </property>
+      <property name="widgetResizable">
+       <bool>true</bool>
+      </property>
+      <widget class="QWidget" name="scrollAreaWidgetContents">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>781</width>
+         <height>551</height>
+        </rect>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QProgressBar" name="progressBar">
+      <property name="geometry">
+       <rect>
+        <x>50</x>
+        <y>140</y>
+        <width>1041</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Bahnschrift SemiBold</family>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QProgressBar {
+    border: 2px solid #185a9d;
+    border-radius: 8px;
+    background: #e0f7f5;
+    text-align: center;
+    color: black;
+}
+QProgressBar::chunk {
+    border-radius: 8px;
+    background: qlineargradient(
+        spread:pad,
+        x1:0, y1:0, x2:1, y2:1,
+        stop:0 #6aa7c9,   /* 위쪽 조금 더 밝은 블루 */
+        stop:1 #4480a8    /* 아래쪽 메인 블루 */
+    );
+}
+</string>
+      </property>
+      <property name="value">
+       <number>24</number>
+      </property>
+     </widget>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1465</width>
+     <height>26</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

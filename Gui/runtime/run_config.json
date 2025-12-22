@@ -1,0 +1,8 @@
+{
+  "train_py": "C:\\Users\\ORAIL\\Downloads\\tech_gui_최종\\tech_gui\\train_model\\train.py",
+  "work_dir": "C:\\Users\\ORAIL\\Downloads\\tech_gui_최종\\tech_gui\\train_model",
+  "original_zip": "C:\\Users\\ORAIL\\Downloads\\tech_gui_최종\\tech_gui\\train_model\\pcb_data.zip",
+  "augmented_zip": "C:\\Users\\ORAIL\\Downloads\\tech_gui_최종\\tech_gui\\train_model\\pcb_data2.zip",
+  "data_root": "C:\\Users\\ORAIL\\Downloads\\tech_gui_최종\\tech_gui\\train_model\\content\\pcb_raw",
+  "run_name": "yolov8n_20250912_182832"
+}

@@ -1,0 +1,9 @@
+{
+  "ts": "2025-11-17 16:07:55",
+  "test_images_source": [
+    "D:/tech_gui/pcb_ori_cpu_test.zip"
+  ],
+  "weights_source": "D:\\tech_gui\\tech_gui\\tech_gui\\inference_model\\content\\weights\\last.pt",
+  "staged_test_dir": "D:\\tech_gui\\tech_gui\\tech_gui\\inference_model\\content\\pcb_std\\images\\test_20251117_160755",
+  "staged_weights": "D:\\tech_gui\\tech_gui\\tech_gui\\inference_model\\content\\weights\\last.pt"
+}
