@@ -79,18 +79,20 @@ class PCBDetector:
         data_yaml = self.create_yaml_config(dataset_dir, test_subdir)
 
         # # mAP 계산 (옵션)
+        #### cpu에서의 가속을 위해 해당 부분은 생략할 수 있습니다.(10초 소요)
         map50 = 0.0
-        # if show_mAP:
-        #     try:
-        #         # 라벨 파일이 있는지 간단 체크
-        #         if any(test_img_dir.parent.parent.glob("labels/**/*.txt")):
-        #             metrics = self.model.val(
-        #                 data=str(data_yaml), split="test", project="runs_ultra",
-        #                 name="yolov8n_test_val", plots=False, device=self.device
-        #             )
-        #             map50 = metrics.box.map50
-        #     except Exception as e:
-        #         print(f"[WARNING] mAP 계산 실패: {e}")
+        if show_mAP:
+            try:
+                # 라벨 파일이 있는지 간단 체크
+                if any(test_img_dir.parent.parent.glob("labels/**/*.txt")):
+                    metrics = self.model.val(
+                        data=str(data_yaml), split="test", project="runs_ultra",
+                        name="yolov8n_test_val", plots=False, device=self.device
+                    )
+                    map50 = metrics.box.map50
+            except Exception as e:
+                print(f"[WARNING] mAP 계산 실패: {e}")
+        #### cpu에서의 가속을 위해 해당 부분까지는 생략할 수 있습니다.(10초 소요)
 
         # 결과 저장 폴더명
         run_name = f"pred_test_conf{int(conf*100)}_iou{int(iou*100)}_mAP{int(map50*1000):04d}_{timestamp}"

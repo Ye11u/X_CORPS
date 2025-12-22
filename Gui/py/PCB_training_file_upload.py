@@ -1,17 +1,22 @@
+#######################################################################################
+# 훈련 파일 업로드 화면
+#######################################################################################
 import os, shutil, json, traceback, time, sys
 import subprocess 
 from pathlib import Path
 from PyQt5 import uic
 import res_rc
 from PyQt5.QtWidgets import QWidget, QFileDialog, QMessageBox
-from dragdrop_uploader import FileDropWidget
+from dragdrop_uploader import FileDropWidget # 파일 드래그 앤 드롭 기능 로드 
 from PyQt5.QtCore import QEvent, Qt
 
+# 개발 환경(일반 폴더)과 배포 환경(임시 폴더 _MEIPASS) 모두에서 경로 오류를 방지하기 위한 함수 
 if hasattr(sys, '_MEIPASS'):
     ROOT = Path(sys._MEIPASS)
 else:
     ROOT = Path(__file__).resolve().parents[1]
 
+# 모듈 import 경로 문제 해결을 위해 시스템 경로에 루트 추가
 if str(ROOT) not in sys.path:
     sys.path.append(str(ROOT))
 
@@ -22,7 +27,7 @@ def resource_path(relative_path):
         base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         return os.path.join(base_path, relative_path)
     
-
+# UI 파일 로드 
 UI_FILE = ROOT / "ui" / "PCB_training_file_upload.ui"
 FormClass, BaseClass = uic.loadUiType(str(UI_FILE))
 
@@ -30,22 +35,27 @@ class PCB_Training_FileUpload(BaseClass, FormClass):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setupUi(self)
-        self._navigator = {"go_next": None, "go_back": None}
+        self._navigator = {"go_next": None, "go_back": None} #화면 전환을 위한 네비게이터 (초기 화면에서 함수를 주입받음)
+        self.dataset_path = None # 훈련 데이터셋 경로 (사용자로부터 입력받아서 설정할 변수)
+        self.model_py_path = None # 훈련 모델 경로 (사용자로부터 입력받아서 설정할 변수)
 
-        self.dataset_path = None 
-        self.model_py_path = None 
-
+        # 버튼 클릭 이벤트 연결 
         self.file_btn.clicked.connect(self.pick_dataset_zip)
         self.file_btn_2.clicked.connect(self.pick_model_py)
         self.next_btn.clicked.connect(self.next_page)
         self.back_btn.clicked.connect(self.back_page)
 
-        self._update_btn_texts()
-        self.file_btn.setAcceptDrops(True) 
+        self._update_btn_texts() # 파일이 선택되면 버튼 텍스트를 업데이트하는 함수
+
+         # 파일 드래그 앤 드롭 함수 연결 
+        self.file_btn.setAcceptDrops(True)
         self.file_btn_2.setAcceptDrops(True) 
+        
+        # 드래그 시 버튼 스타일 변경 
         self.file_btn.installEventFilter(self)
         self.file_btn_2.installEventFilter(self)
 
+        # 드래그 전/후 버튼 스타일 
         self._btn1_style0 = self.file_btn.styleSheet() or ""
         self._btn2_style0 = self.file_btn_2.styleSheet() or ""
         self._hover_style = """
@@ -55,7 +65,8 @@ class PCB_Training_FileUpload(BaseClass, FormClass):
             border-radius: 10px;
         }
         """
-
+    
+        # 드개그 앤 드랍을 인식하는 영역 생성 
         self.dropper = FileDropWidget(
             text="여기로 .zip(데이터셋) 또는 .py(모델) 드래그",
             accept_exts=['.zip', '.py'],
@@ -64,6 +75,8 @@ class PCB_Training_FileUpload(BaseClass, FormClass):
             parent=self
         )
         self.dropper.filesDropped.connect(self._on_files_dropped)
+
+        # UI 구조가 변경되더라도 코드가 깨지지 않도록, 부모 위젯의 레이아웃을 찾아 Dropper를 추가함
         container = self.file_btn.parentWidget()
         target_layout = None
         from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QGridLayout, QFormLayout, QLayout
@@ -75,6 +88,7 @@ class PCB_Training_FileUpload(BaseClass, FormClass):
             container = container.parentWidget()
 
         if target_layout is None:
+            # 레이아웃을 못 찾을 경우 추가  (예외 처리, 현 코드 및 ui에선 레이아웃이 이미 정의되어 있음)
             cw = getattr(self, "centralwidget", None)
             if cw is not None and cw.layout() is not None:
                 cw.layout().addWidget(self.dropper)
@@ -86,12 +100,12 @@ class PCB_Training_FileUpload(BaseClass, FormClass):
         else:
             target_layout.addWidget(self.dropper)
 
-
-
+    # 초기 화면에서 페이지 이동 함수를 받아오는 함수 
     def set_navigator(self, go_next=None, go_back=None):
         self._navigator["go_next"] = go_next
         self._navigator["go_back"] = go_back
 
+    # 기본 타일 선택 함수: 파일 탐색기로 .zip 파일을 선택함 
     def pick_dataset_zip(self):
         path, _ = QFileDialog.getOpenFileName(
             self, "Select Training Dataset (.zip)", "", "Zip Files (*.zip)"
@@ -100,6 +114,7 @@ class PCB_Training_FileUpload(BaseClass, FormClass):
             self.dataset_path = path
             self._update_btn_texts()
 
+    # 기본 모델 파일 선택 함수: 파일 탐색기로 .py 함수 선택 
     def pick_model_py(self):
         path, _ = QFileDialog.getOpenFileName(
             self, "Select Model Script (.py)", "", "Python Files (*.py)"
@@ -108,6 +123,7 @@ class PCB_Training_FileUpload(BaseClass, FormClass):
             self.model_py_path = path
             self._update_btn_texts()
 
+    # 드랍 영역에 파일이 들어왔을 때 동작하는 함수 
     def _on_files_dropped(self, paths):
         if not paths:
             return
@@ -116,6 +132,7 @@ class PCB_Training_FileUpload(BaseClass, FormClass):
         picked_py = None
 
         for p in paths:
+            # 확장자를 확인하여 zip 형식은 데이터셋으로, py 형식은 모델로 할당 
             ext = os.path.splitext(p)[1].lower()
             if ext == ".zip":
                 picked_zip = p
@@ -135,7 +152,7 @@ class PCB_Training_FileUpload(BaseClass, FormClass):
         else:
             QMessageBox.information(self, "안내", ".zip 또는 .py 파일만 드래그해 주세요.")
 
-
+    # 버튼 텍스트를 선택된 파일명으로 변경하는 함수 
     def _update_btn_texts(self):
         self.file_btn.setText(
             os.path.basename(self.dataset_path) if self.dataset_path else "Select .zip dataset"
@@ -143,18 +160,21 @@ class PCB_Training_FileUpload(BaseClass, FormClass):
         self.file_btn_2.setText(
             os.path.basename(self.model_py_path) if self.model_py_path else "Select model .py"
         )
-
+    # 버튼 위에 파일을 드래그했을 때 점선 테두리 디자인을 변경하는 함수  
     def eventFilter(self, obj, event):
+        # 데이터셋 버튼 처리
         if obj is self.file_btn:
             if event.type() in (QEvent.DragEnter, QEvent.DragMove):
                 if event.mimeData().hasUrls():
                     for url in event.mimeData().urls():
                         p = url.toLocalFile()
+                        # zip 파일인 경우에만 스타일 변경 및 드롭 허용
                         if p and os.path.splitext(p)[1].lower() == ".zip":
                             obj.setStyleSheet(self._hover_style)
                             event.acceptProposedAction()
                             return True
                 return False
+            # 드래그가 버튼 밖으로 나가거나 드롭이 끝나면 원래 스타일로 복구
             if event.type() == QEvent.DragLeave:
                 obj.setStyleSheet(self._btn1_style0)      
                 return False
@@ -176,7 +196,7 @@ class PCB_Training_FileUpload(BaseClass, FormClass):
                         QMessageBox.information(self, "안내", ".zip 파일만 드롭할 수 있습니다.")
                         return True
                 return False
-
+        # 모델 스크립트 버튼 처리 (.py 형식으로 위와 동일하게 동작)
         if obj is self.file_btn_2:
             if event.type() in (QEvent.DragEnter, QEvent.DragMove):
                 if event.mimeData().hasUrls():
@@ -212,6 +232,29 @@ class PCB_Training_FileUpload(BaseClass, FormClass):
                 return False
         return super().eventFilter(obj, event)
 
+    # 파일 유효성 검사 후 학습 환경 구성
+    def next_page(self):
+        # 필수 데이터셋 / 모델 파일 선택 여부 확인
+        if not self.dataset_path:
+            QMessageBox.warning(self, "경고", "데이터셋(.zip)을 선택하세요.")
+            return
+        if not self.model_py_path:
+            QMessageBox.warning(self, "경고", "모델 파일(.py)을 선택하세요.")
+            return
+        # 선택된 파일들을 학습 폴더로 복사 & json 생성하는 함수 
+        ok, msg = self._wire_uploaded_zip_into_train_model()
+        if not ok:
+            QMessageBox.critical(self, "실패", msg)
+            return
+            
+        ok2, msg2 = self._run_train_py_now()
+        if ok2:
+            QMessageBox.information(self, "학습 완료", msg2)
+        else:
+            QMessageBox.critical(self, "학습 실패", msg2)
+        if self._navigator["go_next"]:
+            self._navigator["go_next"]()
+    
     def next_page(self):
         if not self.dataset_path:
             QMessageBox.warning(self, "경고", "데이터셋(.zip)을 선택하세요.")
@@ -224,14 +267,12 @@ class PCB_Training_FileUpload(BaseClass, FormClass):
         if not ok:
             QMessageBox.critical(self, "실패", msg)
             return
+        QMessageBox.information(self, "완료", msg)
 
-        ok2, msg2 = self._run_train_py_now()
-        if ok2:
-            QMessageBox.information(self, "학습 완료", msg2)
-        else:
-            QMessageBox.critical(self, "학습 실패", msg2)
+
         if self._navigator["go_next"]:
             self._navigator["go_next"]()
+
 
     def back_page(self):
         if self._navigator["go_back"]:
@@ -282,24 +323,6 @@ class PCB_Training_FileUpload(BaseClass, FormClass):
         except Exception as e:
             return False, f"연결 실패: {e}\n{traceback.format_exc()}"
         
-    def next_page(self):
-        if not self.dataset_path:
-            QMessageBox.warning(self, "경고", "데이터셋(.zip)을 선택하세요.")
-            return
-        if not self.model_py_path:
-            QMessageBox.warning(self, "경고", "모델 파일(.py)을 선택하세요.")
-            return
-
-        ok, msg = self._wire_uploaded_zip_into_train_model()
-        if not ok:
-            QMessageBox.critical(self, "실패", msg)
-            return
-        QMessageBox.information(self, "완료", msg)
-
-
-        if self._navigator["go_next"]:
-            self._navigator["go_next"]()
-
     def _run_train_py_now(self):
         project_root = Path(__file__).resolve().parents[1]
         runtime_json = project_root / "runtime" / "run_config.json"

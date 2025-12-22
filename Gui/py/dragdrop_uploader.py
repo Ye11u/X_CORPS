@@ -33,31 +33,31 @@ class FileDropWidget(QFrame):
 
         self.setObjectName("FileDropWidget")
         self.setStyleSheet("""
-            /* 기본 상태: 스카이블루 */
+            /* 기본: 하늘 */
             QFrame#FileDropWidget {
-                border: 3px dashed #4DA3FF;      /* 중간 톤 스카이블루 */
+                border: 3px dashed #4DA3FF;      /* 중간 하늘 */
                 border-radius: 16px;
-                background: #EAF6FF;             /* 아주 밝은 하늘색 */
+                background: #EAF6FF;             /* 밝은 하늘 */
             }
 
-            /* 마우스 오버: 살짝 더 진하게 */
+            /* 마우스 넘어가면: 좀 더 진하게 */
             QFrame#FileDropWidget:hover {
-                border-color: #1C8CFF;           /* 진한 스카이블루 */
-                background: #DFF1FF;             /* 한 톤 더 선명 */
+                border-color: #1C8CFF;           /* 진한 파랑 */
+                background: #DFF1FF;             /* 좀 더 선명 */
             }
 
-            /* 드래그 중(하이라이트): 실선 + 그라디언트 */
+            /* 드래그 중이면: 실선 + 그라디언트 */
             QFrame#FileDropWidget[dragActive="true"] {
                 border: 3px solid #1C8CFF;
                 background: qlineargradient(
                     x1:0, y1:0, x2:0, y2:1,
                     stop:0 #EAF6FF,              /* 위쪽 연한 하늘 */
-                    stop:1 #CFE9FF               /* 아래쪽 파스텔 블루 */
+                    stop:1 #CFE9FF               /* 아래쪽 파랑 */
                 );
             }
 
             QLabel#DropLabel {
-                color: #0E4775;                  /* 딥블루: 가독성 ↑ */
+                color: #0E4775;                  /* 진한 파랑*/
                 font-size: 16px;
                 font-weight: 600;
                 padding: 8px 4px;
@@ -69,8 +69,6 @@ class FileDropWidget(QFrame):
                 background: #F3F9FF;
             }
         """)
-
-
 
         layout = QVBoxLayout(self)
         layout.setContentsMargins(16, 16, 16, 16)
