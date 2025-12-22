@@ -6,6 +6,7 @@
 자체 pcb dataset을 제작하여 모델의 성능을 검증하였다. 
 
 - **GUI 어플리케이션은 Gui 폴더의 README를 참고.**
+- **AI 모델 학습 및 평가, 증강은 Model 폴더의 README를 참고.**
 - **라즈베리파이 서버 실행방법은 Raspberry_Pi_server 폴터의 README를 참고.**
 
 ## 시연 영상
