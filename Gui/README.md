@@ -38,7 +38,7 @@
 - file_btn_2: 모델 구조 python 파일을 받는 버튼. (실제 사용자로부터 모델 python 코드를 받을 경우 오류가 발생할 수 있기 때문에, 실제 동작하는 모델은 yolov8n.pt로 해당 코드 파일에 내장되어 있습니다.) 
 - back_btn: 이전 선택 화면으로 돌아가는 버튼
 - next_btn: 모니터링 페이지로 넘어가는 버튼. 버튼을 누르면 next_page()에서 _run_train_py_now()를 호출하며 학습 시작
-- dragdrop_uploader.py: 파일을 드래그 앤 드랍으로 추가, 추가되었을 때 색상 변경 기능을 구현한 파일
+- FileDropWidget: dragdrop_uploader.py에서 import해서 사용. 파일을 드래그 앤 드랍으로 추가, 추가되었을 때 색상 변경 기능을 구현한 클래스
 
 ### 4. PCB_training_monitoring.py
 훈련 과정을 모니터링하는 화면
