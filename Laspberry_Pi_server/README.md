@@ -31,7 +31,7 @@
  4.  핫스팟 연결
     - 노트북 핫스팟 연결 
     - VNC Viewer 접속해서 라즈베리파이도 노트북과 같은 핫스팟 연결
-5.라즈베리파이 VNC Viewer : code .로 vs code를 열고, home/GPS 디렉토리 폴더를 선택
-6. 라즈베리파이 VNC Viewer : vs code의 터미널 창에 python server.py 실행 (서버 돌아감)
+5. VNC Viewer: code .로 vs code를 열고, home/GPS 디렉토리 폴더를 선택
+6. VNC Viewer: vs code의 터미널 창에 python server.py 실행 (서버 돌아감)
 7. 노트북: GUI 실행
    - 만약 실시간 카메라 화면이 안 보인다면, VNC Viewer : vs code의 터미널 창에 뜬 서버 주소와 노트북 GUI에 있는 주소가 같은 지 확인  
