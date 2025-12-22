@@ -5,9 +5,9 @@
 이 코드는 반도체 제조 산업 불량 탐지 task에 대해 pcb dataset에서의 결함 클래스 분류 및 결함 부위 표시 기능을 구현한 어플리케이션이다.
 자체 pcb dataset을 제작하여 모델의 성능을 검증하였다. 
 
-- **GUI 어플리케이션은 Gui 폴더의 README를 참고.**
-- **AI 모델 학습 및 평가, 증강은 Model 폴더의 README를 참고.**
-- **라즈베리파이 서버 실행방법은 Raspberry_Pi_server 폴터의 README를 참고.**
+- **GUI 어플리케이션: Gui 폴더의 README를 참고.**
+- **AI 모델 학습 및 평가, 증강: Model 폴더의 README를 참고.**
+- **라즈베리파이 서버 실행방법: Raspberry_Pi_server 폴터의 README를 참고.**
 
 ## 시연 영상
 
