@@ -1,5 +1,5 @@
 #######################################################################################
-# 훈련 파일 업로드 화면
+# 훈련 파일 업로드 화면 >> next 버튼 누르면 훈련 스크립트 돌리기 시작
 #######################################################################################
 import os, shutil, json, traceback, time, sys
 import subprocess 
@@ -241,46 +241,33 @@ class PCB_Training_FileUpload(BaseClass, FormClass):
         if not self.model_py_path:
             QMessageBox.warning(self, "경고", "모델 파일(.py)을 선택하세요.")
             return
-        # 선택된 파일들을 학습 폴더로 복사 & json 생성하는 함수 
-        ok, msg = self._wire_uploaded_zip_into_train_model()
+        
+        # 학습 파일 생성: 선택된 파일들을 학습 폴더로 복사 & json 생성하는 함수 
+        ok, msg = self._wire_uploaded_zip_into_train_model() # 생성 성공 여부, 결과 메세지를 반환 받음
         if not ok:
-            QMessageBox.critical(self, "실패", msg)
+            QMessageBox.critical(self, "실패", msg) # 실패 메세지 반환 시 중단 
             return
-            
+        
+        # 학습 스크립트 실행 함수 
         ok2, msg2 = self._run_train_py_now()
         if ok2:
             QMessageBox.information(self, "학습 완료", msg2)
         else:
             QMessageBox.critical(self, "학습 실패", msg2)
+            
+        # 모두 끝나면 다음 페이지로 이동 
         if self._navigator["go_next"]:
             self._navigator["go_next"]()
-    
-    def next_page(self):
-        if not self.dataset_path:
-            QMessageBox.warning(self, "경고", "데이터셋(.zip)을 선택하세요.")
-            return
-        if not self.model_py_path:
-            QMessageBox.warning(self, "경고", "모델 파일(.py)을 선택하세요.")
-            return
-
-        ok, msg = self._wire_uploaded_zip_into_train_model()
-        if not ok:
-            QMessageBox.critical(self, "실패", msg)
-            return
-        QMessageBox.information(self, "완료", msg)
-
-
-        if self._navigator["go_next"]:
-            self._navigator["go_next"]()
-
-
+            
+    # 뒤로 가기 함수 
     def back_page(self):
         if self._navigator["go_back"]:
             self._navigator["go_back"]()
 
-
+    # 사용자가 업로드한 파일을 Gui\train_model 디렉토리로 복사해서 사용 
     def _wire_uploaded_zip_into_train_model(self):
         try:
+            # Gui\train_model 디렉토리 찾기 
             project_root = Path(__file__).resolve().parents[1]          
             train_dir    = project_root / "train_model"
             train_py     = train_dir / "train.py"
@@ -291,6 +278,7 @@ class PCB_Training_FileUpload(BaseClass, FormClass):
             if not user_zip.exists():
                 raise FileNotFoundError(f"업로드 zip이 없습니다: {user_zip}")
 
+            # 원본 파일을 건드리지 않고, 사본을 생성하여 사용 
             train_dir.mkdir(parents=True, exist_ok=True)
             (train_dir / "content").mkdir(parents=True, exist_ok=True) 
             zip1 = train_dir / "pcb_data.zip"
@@ -298,18 +286,20 @@ class PCB_Training_FileUpload(BaseClass, FormClass):
             shutil.copy2(user_zip, zip1)
             shutil.copy2(user_zip, zip2)
 
+            # 고유 폴더명 생성 (timestamp 이용) >> 결과가 겹치는 것을 방지 
             run_name = f"yolov8n_{time.strftime('%Y%m%d_%H%M%S')}"
 
             runtime = project_root / "runtime"
             runtime.mkdir(parents=True, exist_ok=True)
             cfg = {
-                "train_py": str(train_py.resolve()),
+                "train_py": str(train_py.resolve()), # 절대 경로로 변환하여 저장 
                 "work_dir": str(train_dir.resolve()),  
                 "original_zip": str(zip1.resolve()),  
                 "augmented_zip": str(zip2.resolve()),
                 "data_root": str((train_dir / "content" / "pcb_raw").resolve()),
                 "run_name": run_name
             }
+            # 훈련 설정 JSON 파일을 생성 
             with open(runtime / "run_config.json", "w", encoding="utf-8") as f:
                 json.dump(cfg, f, ensure_ascii=False, indent=2)
 
@@ -322,13 +312,15 @@ class PCB_Training_FileUpload(BaseClass, FormClass):
             )
         except Exception as e:
             return False, f"연결 실패: {e}\n{traceback.format_exc()}"
-        
+    
+    # 학습을 수행하는 함수 >> subprocess에서 학습을 돌리고 로그 캡쳐 
     def _run_train_py_now(self):
         project_root = Path(__file__).resolve().parents[1]
         runtime_json = project_root / "runtime" / "run_config.json"
         if not runtime_json.exists():
             return False, f"실행 설정이 없습니다: {runtime_json}"
 
+        # 생성한 json 설정 파일 불러옴 
         with open(runtime_json, "r", encoding="utf-8") as f:
             cfg = json.load(f)
 
@@ -339,40 +331,24 @@ class PCB_Training_FileUpload(BaseClass, FormClass):
         if not cwd.exists():
             return False, f"CWD가 없습니다: {cwd}"
 
+        # 콘솔에 출력되는 로그를 읽어옴 
         log_path = cwd / "train_stdout.log"
         try:
             with open(log_path, "w", encoding="utf-8") as lf:
-                proc = subprocess.run(
-                    [sys.executable, str(py)],
-                    cwd=str(cwd),
-                    stdout=lf,
-                    stderr=subprocess.STDOUT,
+                proc = subprocess.run( # subprocess: 외부 파이썬 스크립트 실행 
+                    [sys.executable, str(py)], # sys.executable: subprocess에서 현재 GUI를 실행 중인 환경과 동일한 환경 사용
+                    cwd=str(cwd), # 작업 디렉토리 설정 
+                    stdout=lf, # 표준 출력을 파일로 저장 
+                    stderr=subprocess.STDOUT, # 에러메세지도 같이 저장 
                     text=True,
                     check=False
                 )
-            code = proc.returncode
-            if code == 0:
+            # 프로세스 종료 코드 변수 
+            code = proc.returncode 
+            if code == 0: # 0이면 정상 종료
                 return True, f"학습이 정상 종료되었습니다. 로그: {log_path}"
-            else:
+            else: # 아니면 오류 
                 return False, f"학습 실패(returncode={code}). 로그 확인: {log_path}"
         except Exception as e:
             return False, f"학습 실행 중 예외: {e}"
-        
-    def _run_train_in_new_console(self):
-        project_root = Path(__file__).resolve().parents[1]
-        cfg_path = project_root / "runtime" / "run_config.json"
-        if not cfg_path.exists():
-            QMessageBox.critical(self, "실패", f"실행 설정이 없습니다: {cfg_path}")
-            return
-
-        cfg = json.loads(cfg_path.read_text(encoding="utf-8"))
-        py  = Path(cfg["train_py"])
-        cwd = Path(cfg["work_dir"])
-        if not py.exists() or not cwd.exists():
-            QMessageBox.critical(self, "실패", f"경로 오류\npy={py}\ncwd={cwd}")
-            return
-
-        cmd = f'"{sys.executable}" "{py}"'
-        subprocess.Popen(["cmd.exe", "/k", cmd], cwd=str(cwd))
-        QMessageBox.information(self, "실행됨", f"새 콘솔에서 학습을 시작했습니다.\nCWD: {cwd}\nPY : {py}")
-
+    

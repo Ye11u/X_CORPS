@@ -14,8 +14,8 @@ try:
 except ImportError:
     print("ultralytics 설치 필요: pip install ultralytics")
 
-    
 def set_seed(seed):
+    """시드 고정 함수"""
     random.seed(seed)
     np.random.seed(seed)
     torch.manual_seed(seed)
@@ -26,14 +26,15 @@ def set_seed(seed):
     torch.backends.cudnn.benchmark = False
 
 def create_yaml_config(dataset_dir):
+    """yolo 학습에 필요한 .yaml 파일을 동적으로 생성"""
     print("=== YAML 설정 파일 생성 ===")
     
     yaml_content = {
         'path': str(dataset_dir),
         'train': 'images/train',
-        'val': 'images/test', 
+        'val': 'images/val', # Validation 셋이 없으면 Test 셋으로 대체하여 학습 추이 확인
         'test': 'images/test',
-        'names': {
+        'names': { # 클래스 ID와 이름을 매핑핑
             0: 'silk',
             1: 'short', 
             2: 'pad_open',
@@ -52,7 +53,7 @@ def create_yaml_config(dataset_dir):
     return yaml_path
 
 def validate_labels(dataset_dir):
-    """라벨 파일 검증"""
+    """라벨 파일 검증ㅣ # 학습 시작 전, 라벨 파일(.txt)에 오류가 없는지 미리 확인"""
     print("=== 라벨 파일 검증 ===")
     
     STD_ROOT = Path(dataset_dir)
@@ -76,7 +77,7 @@ def validate_labels(dataset_dir):
                         bad.append((str(p), line))
                         continue
                     ids.add(cid)
-                    if cid not in {0, 1, 2, 3}:
+                    if cid not in {0, 1, 2, 3}: # 정의된 클래스 ID 이외의 값이 있는지 체크 
                         bad.append((str(p), line))
     
     print("발견된 클래스 ID 집합:", sorted(list(ids)))
@@ -87,9 +88,10 @@ def validate_labels(dataset_dir):
             print(x)
 
 def train_model(data_yaml, epochs=50, img_size=640, batch=16, run_name="yolov8n", seed=42, save_root="./pcb_aug_js"):
+    """YOLOv8n 모델을 로드하여 학습 수행"""
     print("=== YOLOv8 모델 학습 시작 ===")
     
-    model = YOLO("yolov8n.pt")
+    model = YOLO("yolov8n.pt") # 사전 학습된 nano 모델을 사용용
     save_dir = Path(save_root) / "model" / "weight"
     save_dir.mkdir(parents=True, exist_ok=True)
 
@@ -99,26 +101,26 @@ def train_model(data_yaml, epochs=50, img_size=640, batch=16, run_name="yolov8n"
         imgsz=img_size,
         batch=batch,
         device=0 if torch.cuda.is_available() else "cpu",
-        project=str(Path(save_root) / "model"),   # ✅ 상위 폴더 변경
+        project=str(Path(save_root) / "model"),   # 결좌 저장 경로로
         name="weights",  
-        val=False,
+        val=False, # validation 과정 생략 (필요시 True)
         exist_ok=True,
         seed=seed,
         deterministic=True,
-        mosaic=0.3,
-        scale=0.2,
-        translate=0.05,
-        hsv_s=0.3,
-        hsv_v=0.2,
-        degrees=2.0,
-        fliplr=0.3,
-        box=7.5,
-        # cls=0.75,
-        cls=3,
-        dfl=1.5,
+        # 데이터 증강 하이퍼파라미터: 실험을 통해 최적 증강을 찾음 (데이터가 변경되면 바꾸어야함)
+        mosaic=0.3, # masaic 증강
+        scale=0.2, # 이미지 스케일 변화
+        translate=0.05, # 이미지 이동
+        hsv_s=0.3, # 채도 변환
+        hsv_v=0.2, # 명도 변환 
+        degrees=2.0, # 회전 
+        fliplr=0.3, # 좌우 반전
+        box=7.5, # box loss 가중치
+        cls=3, # class loss 가중치
+        dfl=1.5, 
     )
 
-    metrics = model.val(
+    metrics = model.val( # 학습이 끝나면 validation을 수행 
         data=data_yaml,
         imgsz=img_size,
         device=0 if torch.cuda.is_available() else "cpu",
@@ -126,6 +128,7 @@ def train_model(data_yaml, epochs=50, img_size=640, batch=16, run_name="yolov8n"
         name=f"{run_name}_val",
         plots=False,
     )
+    # 학습 결과 파일(best.pt, last.pt)을 지정된 폴더로 정리
     yolov_dir = Path(save_root) / "model" / "weights" / "weights"
     src_last = yolov_dir / "last.pt"
     dst_last = Path(save_root) / "model" / "weights" / "last.pt"
@@ -146,13 +149,15 @@ def train_model(data_yaml, epochs=50, img_size=640, batch=16, run_name="yolov8n"
 
     return str(dst_last)
 
-
+# 학습된 모델로 테스트 셋을 추론하고, mAP 측정 및 결과 이미지 저장
 def test_and_predict(weights_path, data_yaml, test_img_dir, img_size=640, conf=0.25, iou_nms=0.70):
     print("=== 테스트 및 예측 수행 ===")
     run_name = f"pred_test_conf{int(conf*100)}_iou{int(iou_nms*100)}"
     model = YOLO(weights_path)
+    # 추론 속도 측정 
     import time
     start_time = time.time()
+    # validation 모드로 바뀐 뒤, test set에 대해 메트릭 계산 
     test_metrics = model.val(
         data=data_yaml,
         imgsz=img_size,
@@ -167,6 +172,7 @@ def test_and_predict(weights_path, data_yaml, test_img_dir, img_size=640, conf=0
     print(f"[TEST mAP] mAP50-95={test_metrics .box.map:.4f} | mAP50={test_metrics.box.map50:.4f} | mAP75={test_metrics.box.map75:.4f}")
     print(f"Test 시간: {test_time:.2f}초")
 
+    # 이미지에 바운딩 박스를 입힌 시각화 결과 저장 
     res = model.predict(
         source=test_img_dir,
         imgsz=img_size,
@@ -191,6 +197,8 @@ def test_and_predict(weights_path, data_yaml, test_img_dir, img_size=640, conf=0
     return out_dir
 
 def evaluate_background_detection(model_path, dataset_dir, img_size=640, conf=0.25, iou=0.7):
+    """#YOLO 기본 val 기능은 정답이 없는(배경) 이미지에 대한 오검출(False Positive)을 명확하게 지표로 보여주지 않음. 따라서 직접 구현한 함수.
+       # 정상 PCB를 불량으로 잘못 판단하는 비율(FPPI)을 계산하여 과검출 여부 확인"""
     print("=== 정상(배경) 이미지 평가 ===")
     ROOT = Path(dataset_dir)
     IMG_DIR = ROOT / "images" / "test"
@@ -198,13 +206,14 @@ def evaluate_background_detection(model_path, dataset_dir, img_size=640, conf=0.
     
     model = YOLO(model_path)
     
+    # 라벨 파일이 없거나 비어있으면 '정상(Background)' 이미지로 판단
     def is_background(img_path):
         txt = LBL_DIR / (img_path.stem + ".txt")
         if not txt.exists():
             return True
         return txt.read_text().strip() == ""
     
-    # 정상 이미지 찾기
+    # 테스트 셋에서 정상 이미지 리스트 추출
     bg_paths = [p for p in IMG_DIR.iterdir() 
                 if p.suffix.lower() in {".jpg", ".jpeg", ".png", ".bmp"} and is_background(p)]
     
@@ -221,14 +230,18 @@ def evaluate_background_detection(model_path, dataset_dir, img_size=640, conf=0.
             verbose=False
         )
         n_det = len(res[0].boxes)
+        # 검출된 박스가 없어야 정상(TN)
         if n_det == 0:
             tn += 1
+        # 박스가 검출되면 오검출(FP)
         else:
             fp += 1
             fp_boxes_total += n_det
     
     bg_total = len(bg_paths)
+    # 특이도(Specificity): 실제 정상 중 정상으로 예측한 비율
     specificity = (tn / bg_total) if bg_total else 0.0
+    # FPPI: 이미지 한 장당 평균적으로 발생하는 오검출 박스 수
     fppi = (fp_boxes_total / bg_total) if bg_total else 0.0
     
     print(f"[정상(배경) 평가 @ conf={conf}, iou={iou}]")
@@ -250,7 +263,7 @@ def main():
     print("YOLOv8 학습 시작")
     print("=" * 50)
 
-    # GPU 환경을 확인
+    # GPU 환경 확인
     if torch.cuda.is_available():
         print("Gpu is available")
     else:
@@ -258,8 +271,10 @@ def main():
     
     std_root =  args.dataset
 
+    # 설정 파일 생성성
     yaml_path = create_yaml_config(std_root)
     
+    # 모델 학습 
     weights_path = train_model(
         data_yaml=yaml_path,
         epochs=50,
@@ -270,8 +285,10 @@ def main():
         save_root=args.dataset,
     )
 
+    # 학습된 가중치 경로 설정 
     weights_path = Path(args.dataset) / "model" / "weights" / "last.pt"
 
+    # 테스트 및 추론 
     test_img_dir = Path(args.dataset)/ 'images' / 'test'
     test_and_predict(
         weights_path=weights_path,

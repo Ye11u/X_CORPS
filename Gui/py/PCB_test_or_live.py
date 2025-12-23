@@ -1,3 +1,6 @@
+#######################################################################################
+# 테스트 or 실시간 처리 선택 페이지 
+#######################################################################################
 import sys, os
 from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QApplication
@@ -28,29 +31,30 @@ class PCB_SelectTestOrLive(BaseClass, FormClass):
         super().__init__(parent)
         self.setupUi(self)
         
-        self._navigator = {
+        self._navigator = { # 네비게이터 설정 초기화 
             "go_live": None,
             "go_test_file": None,
             "go_back": None
         }
 
+        # 버튼과 페이지 이동 함수 연결  
         self.start_btn_2.clicked.connect(self.go_live_page)   
         self.start_btn_3.clicked.connect(self.go_test_file_page)  
         if hasattr(self, "back_btn"): self.back_btn.clicked.connect(self.go_back_page)
     
    
     def set_navigator(self, go_live=None, go_test_file=None, go_back=None):
-        self._navigator["go_live"] = go_live
+        self._navigator["go_live"] = go_live 
         self._navigator["go_test_file"] = go_test_file
         self._navigator["go_back"] = go_back
 
-    def go_back_page(self):
+    def go_back_page(self): # 뒤로 가기 페이지에 초기 화면 (train/test 분기 화면)의 설정 연결 
         if self._navigator["go_back"]: self._navigator["go_back"]()
 
-    def go_live_page(self):
+    def go_live_page(self): # 같은 방법으로 실시간 처리 페이지 연결 
         if self._navigator["go_live"]: self._navigator["go_live"]()
 
-    def go_test_file_page(self):
+    def go_test_file_page(self): # 같은 방법으로 테스트 파일 업로드 페이지 연결 
         if self._navigator["go_test_file"]: self._navigator["go_test_file"]()
 
 

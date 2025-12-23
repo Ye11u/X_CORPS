@@ -14,6 +14,7 @@ def create_yaml_config(dataset_dir):
     print("=== YAML 설정 파일 생성 ===")
 
     dataset_abs_path = Path(dataset_dir).resolve()
+    # 클래스 정의 (학습 때와 동일하게 맞춰야 함)
     yaml_content = {
         'path': str(dataset_abs_path),
         'train': 'images/train',
@@ -54,8 +55,10 @@ def print_class_metrics(metrics):
 
     for i, name in enumerate(names.values()):
         # confusion matrix 기반 맞춘 개수 계산
+        # 대각선 요소(i, i)가 True Positive(정답) 개수
         tp = matrix[i, i]
-        gt = matrix[:, i].sum()  # ground truth 개수
+        # 해당 열(column)의 합이 Ground Truth(실제 정답) 전체 개수
+        gt = matrix[:, i].sum()  
         total_tp += tp
         total_gt += gt
 
@@ -69,7 +72,7 @@ def print_class_metrics(metrics):
 
         print(f"{name:<12}{tp_gt_str:<12}{p:<12.4f}{r:<12.4f}{m50:<12.4f}{m95:<12.4f}")
 
-    # 전체 평균
+    # 전체 평균 계산 및 출력
     print("-" * len(header))
     avg_p = np.mean(precisions) if len(precisions) > 0 else 0.0
     avg_r = np.mean(recalls) if len(recalls) > 0 else 0.0
@@ -89,7 +92,7 @@ def test_and_predict(weights_path, data_yaml, test_img_dir, device, img_size=640
     device=0 if torch.cuda.is_available() else "cpu"
 
     start_time = time.time()
-    test_metrics = model.val(
+    test_metrics = model.val( # mAP, Precision, Recall을 계산하는 함수: val
         data=data_yaml,
         imgsz=img_size,
         device=device,
@@ -107,7 +110,7 @@ def test_and_predict(weights_path, data_yaml, test_img_dir, device, img_size=640
     print_class_metrics(test_metrics)
 
     print("\n[테스트 세트 예측 결과 저장 중...]")
-    model.predict(
+    model.predict( # 실제 바운딩 박스가 그려진 이미지를 저장하는 함수 
         source=test_img_dir,
         imgsz=img_size,
         conf=conf,
@@ -126,6 +129,7 @@ def test_and_predict(weights_path, data_yaml, test_img_dir, device, img_size=640
 
 
 def evaluate_per_format(model_path, data_yaml, main_dataset_dir, img_size=640):
+    """파일명 접두사를 기준으로 단일 PCB 단위로 쪼갠 뒤, 성능 평가가"""
     print("\n" + "=" * 50)
     print("=== PCB 단위 개별 평가 ===")
     print("=" * 50)
@@ -138,7 +142,7 @@ def evaluate_per_format(model_path, data_yaml, main_dataset_dir, img_size=640):
     img_dir = main_dataset_path / config['test']
     lbl_dir = img_dir.parent.parent / "labels" / img_dir.name
 
-    # 평가할 PCB 단위 (만약, 일부 PCB만 사용한다면 그에 맞게 수정 필요)
+    # 평가할 PCB 단위 패턴 (만약, 일부 PCB만 사용한다면 그에 맞게 수정 필요)
     format_prefixes = [ 
         "num1_A_front", "num1_A_back", 
         "num2_H_front", "num2_H_back",
@@ -154,15 +158,18 @@ def evaluate_per_format(model_path, data_yaml, main_dataset_dir, img_size=640):
     all_images = [p for p in img_dir.iterdir() if p.suffix.lower() in {".jpg", ".png", ".jpeg", ".bmp"}]
     print(f"총 {len(all_images)}개 이미지에서 형식별 평가를 수행합니다.")
 
+    # 임시 디렉토리(Temp)를 사용하여 원본 데이터를 건드리지 않고 부분 데이터셋을 구성
     with tempfile.TemporaryDirectory() as tmpdir:
         tmp_path = Path(tmpdir)
         for prefix in format_prefixes:
             print(f"\n--- [{prefix}] 평가 중 ---")
+            # 임시 폴더 구조 생성 
             tmp_img = tmp_path / "images" / "test"
             tmp_lbl = tmp_path / "labels" / "test"
             tmp_img.mkdir(parents=True, exist_ok=True)
             tmp_lbl.mkdir(parents=True, exist_ok=True)
 
+            # 해당 접두사(prefix)를 가진 파일만 필터링해서 복사
             imgs = [p for p in all_images if p.name.startswith(prefix)]
             if not imgs:
                 print(f"이미지 없음 → 건너뜀")
@@ -174,10 +181,11 @@ def evaluate_per_format(model_path, data_yaml, main_dataset_dir, img_size=640):
                 if lbl.exists():
                     shutil.copy(lbl, tmp_lbl)
 
+            # 임시 YAML 생성 (이 부분 데이터셋만 바라보도록)
             tmp_yaml = tmp_path / "temp.yaml"
             yaml_content = {
                 'path': str(tmp_path.resolve()),
-                'train': 'images/test',
+                'train': 'images/test', # test만 할 거라 train 경로는 더미로 넣음
                 'val': 'images/test',
                 'test': 'images/test',
                 'names': config['names']
@@ -186,7 +194,7 @@ def evaluate_per_format(model_path, data_yaml, main_dataset_dir, img_size=640):
                 yaml.dump(yaml_content, f)
 
             try:
-                metrics = model.val(
+                metrics = model.val( # 부분 데이터셋에 대해 검증 수행
                     data=str(tmp_yaml),
                     imgsz=img_size,
                     device=0 if torch.cuda.is_available() else "cpu",
@@ -202,6 +210,7 @@ def evaluate_per_format(model_path, data_yaml, main_dataset_dir, img_size=640):
             except Exception as e:
                 print(f"({prefix}): {e}")
 
+            # 다음 루프를 위해 임시 폴더 비우기
             shutil.rmtree(tmp_img.parent, ignore_errors=True)
             shutil.rmtree(tmp_lbl.parent, ignore_errors=True)
             if tmp_yaml.exists():
@@ -228,7 +237,7 @@ def main():
         yconf = yaml.safe_load(f)
     test_img_dir = Path(yconf['path']) / yconf['test']
     
-    test_and_predict(
+    test_and_predict( # 전체 데이터셋 평가
         weights_path=MODEL_WEIGHTS,
         data_yaml=yaml_path,
         test_img_dir=test_img_dir,
