@@ -35,10 +35,11 @@
 <img width="1085" height="720" alt="슬라이드4" src="https://github.com/user-attachments/assets/cafd7a91-61b8-49d6-afc4-6fdfa213ae4c" />
 
 - file_btn: 업로드 하는 파일은 train, test, val 하위 폴더로 이루어진 zip 파일이어야 합니다. (하위 폴더에는 images/labels 폴더로 나뉘어져야 합니다.)
-- file_btn_2: 모델 구조 python 파일을 받는 버튼. (실제 사용자로부터 모델 python 코드를 받을 경우 오류가 발생할 수 있기 때문에, 실제 동작하는 모델은 yolov8n.pt로 해당 코드 파일에 내장되어 있습니다.) 
+- file_btn_2: 모델 구조 python 파일을 받는 버튼. (실제 사용자로부터 모델 python 코드를 받을 경우 오류가 발생할 수 있기 때문에, 실제 동작하는 모델은 yolov8n.pt로 해당 코드 파일에 내장되어 있습니다.)
+- FileDropWidget: dragdrop_uploader.py에서 구현된걸 import해서 사용. 파일을 드래그 앤 드랍으로 추가, 추가되었을 때 색상 변경 기능을 구현한 클래스
 - back_btn: 이전 선택 화면으로 돌아가는 버튼
 - next_btn: 모니터링 페이지로 넘어가는 버튼. 버튼을 누르면 next_page()에서 _run_train_py_now()를 호출하며 학습 시작
-- FileDropWidget: dragdrop_uploader.py에서 구현된걸 import해서 사용. 파일을 드래그 앤 드랍으로 추가, 추가되었을 때 색상 변경 기능을 구현한 클래스
+- 학습은 "사용자가 업로드한 데이터들로 yaml 파일 생성 >> Gui\train_model\train.py 스크립트를 서브 프로세스로 실행"하는 방법으로 동작.
 
 ### 4. PCB_training_monitoring.py
 훈련 과정을 모니터링하는 화면
