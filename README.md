@@ -1,18 +1,17 @@
-# Anomaly Detection (ORAIL_TEAM)
+# IN-GPS & X-CORPS (ORAIL_TEAM)
 
-## 설명 
+## 개요
 
 이 코드는 반도체 제조 산업 불량 탐지 task에 대해 pcb dataset에서의 결함 클래스 분류 및 결함 부위 표시 기능을 구현한 어플리케이션이다.
 자체 pcb dataset을 제작하여 모델의 성능을 검증하였다. 
 
-- **GUI 어플리케이션: Gui 폴더의 README를 참고.**
-- **AI 모델 학습 및 평가, 증강: Model 폴더의 README를 참고.**
-- **라즈베리파이 서버 실행방법: Raspberry_Pi_server 폴터의 README를 참고.**
+- **Gui 폴더: 데스크탑 Gui 어플리케이션. README를 참고.**
+- **Raspberry_Pi_server 폴더: 라즈베리파이 카메라 서버. README를 참고.**
+- **Model 폴더: Ai 모델의 훈련, 추론, 증강 방법을 정리함**
 
 ## 시연 영상
 
 (영상첨부)
-
 
 ## 데이터셋 설명 (pcb_data.zip)
 
@@ -34,13 +33,12 @@
   
 ## 주요 기능
 
-### 결함 부위 탐지 및 분류 (Object Detection)
+### 결함 부위 탐지 및 분류 
 - 사용자가 학습 데이터로 이상 이미지와 그에 대한 바운딩 박스 ground truth를 가지고 있을 경우 사용하는 기능이다.
 - yolov8n 모델을 사용하여 결함 위치에 바운딩 박스 표시 및 결함 종류 분류를 학습하는 기능이다.
 
-### 데이터 증강 
-- 훈련 데이터의 양을 늘려 모델의 강건한 학습을 돕는 기능으로, 어플리케이션 내부에 구현되어 있다.
-- 훈련 데이터의 바운딩 박스 위치(결함 위치)를 확인한 후, 결함 부위를 보존하도록 crop -> resize하는 방법이다.
+### 실시간 결함 탐지 
+- 라즈베리파이 카메라를 이용하여 실시간 PCB를 송출받고, 실시간으로 결함을 탐지하는 기능이다.
 
 ### 실시간 학습 모니터링
 - 학습 중인 모델의 loss를 실시간으로 확인할 수 있다.
@@ -50,6 +48,8 @@
 
 이 프로젝트를 실행하기 위해 필요한 라이브러리는 다음과 같다. 
 
+1. 노트북, 데스크탑 환경에서 실행
+GUI
 - Python 3.8+
 - PyQt5
 - PyTorch
@@ -58,10 +58,20 @@
 - matplotlib
 - numpy
 
-이 라이브러리는 아래 명령어를 사용하여 한번에 설치할 수 있다. 
+Model
+- Python 3.8+
+- Pytorch
+- YAML
+- OpenCV
+- ultralytics
+- pathlib
+- zipfile
 
-```bash
-pip install -r requirements.txt
-```
+2. 라즈베리파이 환경에서 실행
+Server
+- Flask
+- Picamera
+- OpenCV
+- numpy
 
-라이브러리 설치가 완료되면 아래 단계를 통해 어플리케이션을 실행할 수 있다. 
+
