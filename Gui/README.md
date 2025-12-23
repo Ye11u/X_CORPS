@@ -103,22 +103,10 @@
 
 - map_label: PCB_result.py와 달리 Normal/Abnormal로 정상/이상 여부만 표시됩니다. (실시간 테스트 시엔 라벨이 없기 때문에, 정확한 mAP 값을 측정이 불가능하기 때문) 
 
-## 설치 방법
-
-이 프로젝트를 실행하기 위해 필요한 라이브러리는 다음과 같다. 
-
-- Python 3.8+
-- PyQt5
-- PyTorch
-- scikit-learn
-- OpenCV
-- matplotlib
-- numpy
-
-이 라이브러리는 아래 명령어를 사용하여 한번에 설치할 수 있다. 
+## 실행 방법
 
 ```bash
-pip install -r requirements.txt
+git clone https://github.com/abb155889/X_CORPS.git
+cd Gui
+python py/login.py
 ```
-
-라이브러리 설치가 완료되면 아래 단계를 통해 어플리케이션을 실행할 수 있다. 
