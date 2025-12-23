@@ -16,7 +16,7 @@ Raspberry Pi 및 카메라 장비에 대한 인수인계 자료이다.
 - **USB 포트**: USB 3.0 ×2, USB 2.0 ×2
 - **네트워크**: Gigabit Ethernet, Wi-Fi, Bluetooth
 - **카메라 포트**: CSI (MIPI 4-lane)
-- **전원**: USB-C 5V 5A
+- **전원**: USB-C 5V 5A  
 구매처링크: https://www.eleparts.co.kr/goods/view?no=13323153
 
 ※ 장비는 이미 구비되어 있으므로, 교체 또는 추가 구매 시 참고용으로만 활용하면 된다.
@@ -30,8 +30,8 @@ Raspberry Pi 및 카메라 장비에 대한 인수인계 자료이다.
 1. Raspberry Pi Imager 설치
 2. Raspberry Pi OS 선택
 3. microSD 카드 선택
-4. Write 실행
-참고: https://m.blog.naver.com/icbanq/223382909813
+4. Write 실행  
+참고: https://m.blog.naver.com/icbanq/223382909813  
 https://makeutil.tistory.com/253
 
 ※ 현재 장비에는 OS가 이미 설치되어 있으므로 새로 설치할 필요는 없다.  
@@ -52,10 +52,8 @@ OS 재설치는 포맷과 동일하므로, 기존 코드 및 환경이 삭제될
 - 노트북에 Putty 또는 VNC Viewer 설치
 - 라즈베리파이 IP 주소로 접속
 - 이후 모든 작업은 노트북에서 진행
-
-링크 : 
-https://velog.io/@easyhyun00/%EB%9D%BC%EC%A6%88%EB%B2%A0%EB%A6%AC%ED%8C%8C%EC%9D%B4-OS-%EC%84%A4%EC%B9%98
-%EC%9B%90%EA%B2%A9-%EC%A0%91%EC%86%8DVNC-Viewer)
+  
+링크 : https://velog.io/@easyhyun00/%EB%9D%BC%EC%A6%88%EB%B2%A0%EB%A6%AC%ED%8C%8C%EC%9D%B4-OS-%EC%84%A4%EC%B9%98-%EC%9B%90%EA%B2%A9-%EC%A0%91%EC%86%8DVNC-Viewer
 
 ## 5. 카메라 장비 구성
 ### 5.1 사용 장비
@@ -63,11 +61,11 @@ https://velog.io/@easyhyun00/%EB%9D%BC%EC%A6%88%EB%B2%A0%EB%A6%AC%ED%8C%8C%EC%9D
 - Raspberry Pi HQ Camera Module
 - 줌 렌즈 (사용)
 - 삼각대
-
-카메라모듈https://www.eleparts.co.kr/EPXTPVJH
-망원렌즈https://www.eleparts.co.kr/goods/view?no=9544398
-줌렌즈https://www.eleparts.co.kr/goods/view?no=9604451
-삼각대https://www.eleparts.co.kr/goods/view?no=9472997
+  
+카메라모듈https://www.eleparts.co.kr/EPXTPVJH  
+망원렌즈https://www.eleparts.co.kr/goods/view?no=9544398  
+줌렌즈https://www.eleparts.co.kr/goods/view?no=9604451  
+삼각대https://www.eleparts.co.kr/goods/view?no=9472997  
 
 ※ 망원렌즈도 구매했으나, 줌 렌즈를 주로 사용하였다.
 
